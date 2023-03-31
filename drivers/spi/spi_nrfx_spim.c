@@ -238,7 +238,7 @@ static int transceive(const struct device *dev,
 
 		transfer_next_chunk(dev);
 
-		error = spi_context_wait_for_completion(&dev_data->ctx);
+		// error = spi_context_wait_for_completion(&dev_data->ctx);
 	}
 
 	spi_context_release(&dev_data->ctx, error);
@@ -292,17 +292,17 @@ static const struct spi_driver_api spi_nrfx_driver_api = {
 };
 
 
-static void event_handler(const nrfx_spim_evt_t *p_event, void *p_context)
-{
-	struct spi_nrfx_data *dev_data = p_context;
+// static void event_handler(const nrfx_spim_evt_t *p_event, void *p_context)
+// {
+// 	struct spi_nrfx_data *dev_data = p_context;
 
-	if (p_event->type == NRFX_SPIM_EVENT_DONE) {
-		spi_context_update_tx(&dev_data->ctx, 1, dev_data->chunk_len);
-		spi_context_update_rx(&dev_data->ctx, 1, dev_data->chunk_len);
+// 	if (p_event->type == NRFX_SPIM_EVENT_DONE) {
+// 		spi_context_update_tx(&dev_data->ctx, 1, dev_data->chunk_len);
+// 		spi_context_update_rx(&dev_data->ctx, 1, dev_data->chunk_len);
 
-		transfer_next_chunk(dev_data->dev);
-	}
-}
+// 		transfer_next_chunk(dev_data->dev);
+// 	}
+// }
 
 static int init_spim(const struct device *dev)
 {
@@ -316,7 +316,7 @@ static int init_spim(const struct device *dev)
 	 */
 	result = nrfx_spim_init(&get_dev_config(dev)->spim,
 				&get_dev_config(dev)->config,
-				event_handler,
+				NULL,
 				data);
 	if (result != NRFX_SUCCESS) {
 		LOG_ERR("Failed to initialize device: %s", dev->name);
@@ -434,7 +434,7 @@ static int spim_nrfx_pm_control(const struct device *dev,
 			.sck_pin   = SPIM_PROP(idx, sck_pin),		       \
 			.mosi_pin  = SPIM_PROP(idx, mosi_pin),		       \
 			.miso_pin  = SPIM_PROP(idx, miso_pin),		       \
-			.ss_pin    = NRFX_SPIM_PIN_NOT_USED,		       \
+			.ss_pin    = 17,		       \
 			.orc       = CONFIG_SPI_##idx##_NRF_ORC,	       \
 			.frequency = NRF_SPIM_FREQ_4M,			       \
 			.mode      = NRF_SPIM_MODE_0,			       \
