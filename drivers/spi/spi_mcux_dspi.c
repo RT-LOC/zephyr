@@ -52,7 +52,7 @@ static int spi_mcux_transfer_next_packet(const struct device *dev)
 	}
 
 	transfer.configFlags = kDSPI_MasterCtar0 | kDSPI_MasterPcsContinuous |
-			       (ctx->config->slave << DSPI_MASTER_PCS_SHIFT);
+			       (ctx->config->slave << DSPI_MASTER_PCS_SHIFT)| kDSPI_TxCompleteFlag;
 
 	if (ctx->tx_len == 0) {
 		/* rx only, nothing to tx */
@@ -95,7 +95,9 @@ static int spi_mcux_transfer_next_packet(const struct device *dev)
 
 	data->transfer_len = transfer.dataSize;
 
-	status = DSPI_MasterTransferNonBlocking(base, &data->handle, &transfer);
+	status = DSPI_MasterTransferBlocking(base, &transfer);
+	// status = DSPI_MasterTransferNonBlocking(base, &data->handle, &transfer);
+
 	if (status != kStatus_Success) {
 		LOG_ERR("Transfer could not start");
 	}
@@ -175,9 +177,24 @@ static int spi_mcux_configure(const struct device *dev,
 
 	ctar_config->baudRate = spi_cfg->frequency;
 
-	ctar_config->pcsToSckDelayInNanoSec = config->pcs_sck_delay;
-	ctar_config->lastSckToPcsDelayInNanoSec = config->sck_pcs_delay;
-	ctar_config->betweenTransferDelayInNanoSec = config->transfer_delay;
+	uint32_t baudrate;
+	baudrate = ctar_config->baudRate;
+
+	//See routine DSPI_MasterSetDelayTimes - Limit on smallest value!! At 15MHz, limit == 15 nanosec
+	ctar_config->pcsToSckDelayInNanoSec = 1000000000U / (baudrate*2);//10000;//config->pcs_sck_delay;
+	ctar_config->lastSckToPcsDelayInNanoSec = 1000000000U / (baudrate*2);//10000;//config->sck_pcs_delay;
+	ctar_config->betweenTransferDelayInNanoSec = 1000000000U / (baudrate*2);//10000;//config->transfer_delay;
+
+
+	// PRINT_DBG_SPI("BAUDRATE = %u\n", baudrate);
+	if(baudrate > 10000000)
+	{
+		ctar_config->pcsToSckDelayInNanoSec = 1;//config->pcs_sck_delay;
+		ctar_config->lastSckToPcsDelayInNanoSec = 1;//config->sck_pcs_delay;
+		ctar_config->betweenTransferDelayInNanoSec = 1;//config->transfer_delay;
+	}
+	// PRINT_DBG_SPI(">> EXTRA = %u\n", ctar_config->pcsToSckDelayInNanoSec);
+	// PRINT_DBG_SPI(" >>>>>>> BAUDRATE = %u, %u\n", ctar_config->baudRate, ctar_config->pcsToSckDelayInNanoSec);
 
 	if (clock_control_get_rate(config->clock_dev, config->clock_subsys,
 				   &clock_freq)) {
@@ -224,7 +241,7 @@ static int transceive(const struct device *dev,
 		goto out;
 	}
 
-	ret = spi_context_wait_for_completion(&data->ctx);
+	ret = 0;//spi_context_wait_for_completion(&data->ctx);
 out:
 	spi_context_release(&data->ctx, ret);
 

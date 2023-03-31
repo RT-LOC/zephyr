@@ -16,6 +16,7 @@ config SOC_MK64F12
 	select HAS_MCUX_FTFX
 	select HAS_MCUX_FTM
 	select HAS_MCUX_RNGA
+	select HAS_MCUX_SMC
 	select HAS_MCUX_SIM
 	select HAS_OSC
 	select HAS_MCG

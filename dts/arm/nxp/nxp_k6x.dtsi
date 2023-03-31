@@ -554,6 +554,16 @@
 			clock-frequency = <60000000>;
 			label = "PIT0";
 		};
+        
+        lptmr0: lptmr@40040000 {
+            compatible = "nxp,kinetis-lptmr";
+            reg = <0x40040000 0x1000>;
+            interrupts = <58 0>;
+            clock-frequency = <128000>;
+            prescaler = <1>;
+            clk-source = <1>;
+            label = "LPTMR_0";
+        };
 	};
 };
 

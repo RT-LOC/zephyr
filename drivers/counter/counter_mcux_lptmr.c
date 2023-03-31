@@ -26,7 +26,7 @@ struct mcux_lptmr_data {
 	void *top_user_data;
 };
 
-static int mcux_lptmr_start(const struct device *dev)
+int mcux_lptmr_start(const struct device *dev)
 {
 	const struct mcux_lptmr_config *config = dev->config;
 
@@ -57,7 +57,7 @@ static int mcux_lptmr_get_value(const struct device *dev, uint32_t *ticks)
 	return 0;
 }
 
-static int mcux_lptmr_set_top_value(const struct device *dev,
+int mcux_lptmr_set_top_value(const struct device *dev,
 				    const struct counter_top_cfg *cfg)
 {
 	const struct mcux_lptmr_config *config = dev->config;
