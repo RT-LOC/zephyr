@@ -434,7 +434,7 @@ static int spim_nrfx_pm_control(const struct device *dev,
 			.sck_pin   = SPIM_PROP(idx, sck_pin),		       \
 			.mosi_pin  = SPIM_PROP(idx, mosi_pin),		       \
 			.miso_pin  = SPIM_PROP(idx, miso_pin),		       \
-			.ss_pin    = 17,		       \
+			.ss_pin    = DT_GPIO_PIN(SPIM(idx), cs_gpios),		       \
 			.orc       = CONFIG_SPI_##idx##_NRF_ORC,	       \
 			.frequency = NRF_SPIM_FREQ_4M,			       \
 			.mode      = NRF_SPIM_MODE_0,			       \
