@@ -61,6 +61,11 @@ extern "C" {
  */
 int net_config_init(const char *app_info, uint32_t flags, int32_t timeout);
 
+
+/*  */
+void set_ip_addr(char *ptr);
+
+
 /**
  * @brief Initialize this network application using a specific network
  * interface.

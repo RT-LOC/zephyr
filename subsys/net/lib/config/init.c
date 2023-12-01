@@ -31,6 +31,12 @@ LOG_MODULE_REGISTER(net_config, CONFIG_NET_CONFIG_LOG_LEVEL);
 extern const struct log_backend *log_backend_net_get(void);
 extern int net_init_clock_via_sntp(void);
 
+char *ip_addr;
+void set_ip_addr(char *ptr)
+{
+	ip_addr = ptr;
+}
+
 static K_SEM_DEFINE(waiter, 0, 1);
 static K_SEM_DEFINE(counter, 0, UINT_MAX);
 static atomic_t services_flags;
