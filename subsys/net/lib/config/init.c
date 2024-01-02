@@ -131,13 +131,13 @@ static void setup_ipv4(struct net_if *iface)
 #endif
 	struct in_addr addr;
 
-	if (sizeof(CONFIG_NET_CONFIG_MY_IPV4_ADDR) == 1) {
+	if (sizeof(ip_addr) == 1) {
 		/* Empty address, skip setting ANY address in this case */
 		return;
 	}
 
-	if (net_addr_pton(AF_INET, CONFIG_NET_CONFIG_MY_IPV4_ADDR, &addr)) {
-		NET_ERR("Invalid address: %s", CONFIG_NET_CONFIG_MY_IPV4_ADDR);
+ 	if (net_addr_pton(AF_INET, ip_addr, &addr)) {
+		NET_ERR("Invalid address: %s", ip_addr);
 		return;
 	}
 
