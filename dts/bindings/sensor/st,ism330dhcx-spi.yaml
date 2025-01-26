@@ -1,6 +1,7 @@
 # Copyright (c) 2020 STMicroelectronics
 # SPDX-License-Identifier: Apache-2.0
 
+asdf
 description: |
     STMicroelectronics ISM330DHCX 6-axis IMU (Inertial Measurement Unit) sensor
     accessed through SPI bus

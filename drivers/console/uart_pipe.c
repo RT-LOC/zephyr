@@ -33,7 +33,8 @@ static void uart_pipe_rx(const struct device *dev)
 	/* As per the API, the interrupt may be an edge so keep
 	 * reading from the FIFO until it's empty.
 	 */
-	for (;;) {
+	// for (;;) {
+	while (uart_irq_update(dev) && uart_irq_rx_ready(dev)) {
 		int avail = recv_buf_len - recv_off;
 		int got;
 
@@ -76,13 +77,15 @@ int uart_pipe_send(const uint8_t *data, int len)
 
 	return 0;
 }
-
+int uart_irq_priority = 0;	
 static void uart_pipe_setup(const struct device *uart)
 {
 	uint8_t c;
 
 	uart_irq_rx_disable(uart);
 	uart_irq_tx_disable(uart);
+
+
 
 	/* Drain the fifo */
 	while (uart_fifo_read(uart, &c, 1)) {
@@ -102,7 +105,17 @@ void uart_pipe_register(uint8_t *buf, size_t len, uart_pipe_recv_cb cb)
 
 	uart_pipe_dev = device_get_binding(CONFIG_UART_PIPE_ON_DEV_NAME);
 
+
 	if (uart_pipe_dev != NULL) {
 		uart_pipe_setup(uart_pipe_dev);
 	}
+
+	    // Get the IRQ number for the UART
+    int uart_irq = DT_IRQN(DT_NODELABEL(usart1));
+
+    // Get the priority of the UART IRQ
+    int uart_irq_priority = NVIC_GetPriority(uart_irq);
+
+    // Print the UART IRQ priority
+    printk("UART IRQ priority: %d\n", uart_irq_priority);
 }

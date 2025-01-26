@@ -736,10 +736,10 @@ static struct ism330dhcx_data ism330dhcx_data;
 
 static const struct ism330dhcx_config ism330dhcx_config = {
 	.bus_name = DT_INST_BUS_LABEL(0),
-	.accel_odr = DT_INST_PROP(0, accel_odr),
-	.accel_range = DT_INST_PROP(0, accel_range),
-	.gyro_odr = DT_INST_PROP(0, gyro_odr),
-	.gyro_range = DT_INST_PROP(0, gyro_range),
+	.accel_odr = 2,//DT_INST_PROP(0, accel_odr),
+	.accel_range = 2,//DT_INST_PROP(0, accel_range),
+	.gyro_odr = 5,//DT_INST_PROP(0, gyro_odr),
+	.gyro_range = 2000,//DT_INST_PROP(0, gyro_range),
 #if DT_ANY_INST_ON_BUS_STATUS_OKAY(spi)
 	.bus_init = ism330dhcx_spi_init,
 	.spi_conf.frequency = DT_INST_PROP(0, spi_max_frequency),

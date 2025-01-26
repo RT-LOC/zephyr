@@ -331,7 +331,7 @@ static int init_spim(const struct device *dev)
 	return 0;
 }
 
-#ifdef CONFIG_PM_DEVICE
+#if 0//def 0//CONFIG_PM_DEVICE
 static int spim_nrfx_pm_control(const struct device *dev,
 				uint32_t ctrl_command,
 				uint32_t *state, pm_device_cb cb, void *arg)
@@ -445,7 +445,7 @@ static int spim_nrfx_pm_control(const struct device *dev,
 	};								       \
 	DEVICE_DT_DEFINE(SPIM(idx),					       \
 		      spi_##idx##_init,					       \
-		      spim_nrfx_pm_control,				       \
+		      0,				       \
 		      &spi_##idx##_data,				       \
 		      &spi_##idx##z_config,				       \
 		      POST_KERNEL, CONFIG_SPI_INIT_PRIORITY,		       \
